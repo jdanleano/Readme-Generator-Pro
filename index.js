@@ -4,7 +4,8 @@ const fs = require('fs');
 const generatePage = require('./utils/generateMarkdown.js');
 
 // TODO: Create an array of questions for user input
-const questions = inquirer.prompt([
+const questions = () => {
+    return inquirer.prompt([
     {
         type: 'input',
         message: "What is your GitHub username?",
@@ -68,7 +69,7 @@ const questions = inquirer.prompt([
     {
         type: 'list',
         message: "What kind of license should your project have?",
-        choices: ['GNU AGPLv3', 'GNU GPLv3', 'GNU LGPLv3', 'Mozilla Public License 2.0', 'Apache License 2.0', 'MIT License', 'Boost Software License 1.0', 'The Unilicense'],
+        choices: ['GNU AGPLv3', 'GNU GPLv3', 'GNU LGPLv3', 'Mozilla Public License 2.0', 'Apache License 2.0', 'MIT License', 'Boost Software License 1.0', 'The Unlicense', 'No License'],
         name: 'license'
     },
 
@@ -96,20 +97,29 @@ const questions = inquirer.prompt([
         name: 'contribution'
     },
 ]);
+};
 
-
-// TODO: Create a function to write README file
-function writeToFile(data) {
-    fs.writeFile('README.md', data, err => {
-        if (err){
-            return console.log(err);
+//Created a function to write README file
+const writeFile = data => {
+    fs.writeFile('MyREADME.md', data, err => {
+        if (err) {
+            console.log(err);
+            return;
+        } else {
+            console.log ("Your file has been created successfully!")
         }
-        console.log("Your README.md has successfully been generated!")
     })
 }
 
-// TODO: Create a function to initialize app
-function init() {}
+//Created a function call to initialize app
+questions()
+.then(answers => {
+    return generatePage(answers);
+})
+.then(data => {
+    return writeFile(data);
+})
+.catch(err => {
+    console.log(err)
+})
 
-// Function call to initialize app
-init();
